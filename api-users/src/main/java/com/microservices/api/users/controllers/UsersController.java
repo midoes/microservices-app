@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.microservices.api.users.model.User;
+import com.microservices.api.users.dto.UserDTO;
 
 @RestController
 @RequestMapping("/users")
@@ -26,7 +26,7 @@ public class UsersController {
 	}
 	
 	@PostMapping
-	public String createUser(@Valid @RequestBody User user) {
+	public String createUser(@Valid @RequestBody UserDTO userDTO) {
 		return "Create user method is called";
 	}
 	
