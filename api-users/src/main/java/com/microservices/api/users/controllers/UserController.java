@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,14 +27,18 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
+	
 	@GetMapping("/status/check")
 	public String status() {
 		return "Working on port: "+env.getProperty("local.server.port");
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {		
-		UserDTO user = userService.createUser(userDTO);
+	public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDetails) {		
+		userDetails.setEncryptedPassword(passwordEncoder.encode(userDetails.getPassword()));
+		UserDTO user = userService.createUser(userDetails);
 		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
 	
