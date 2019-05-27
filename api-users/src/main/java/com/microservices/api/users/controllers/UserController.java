@@ -5,6 +5,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +18,7 @@ import com.microservices.api.users.service.UserService;
 
 @RestController
 @RequestMapping("/users")
-public class UsersController {
+public class UserController {
 	
 	@Autowired
 	private Environment env;
@@ -30,8 +32,9 @@ public class UsersController {
 	}
 	
 	@PostMapping
-	public UserDTO createUser(@Valid @RequestBody UserDTO userDTO) {
-		return userService.createUser(userDTO);
+	public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO userDTO) {		
+		UserDTO user = userService.createUser(userDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
 	
 }
