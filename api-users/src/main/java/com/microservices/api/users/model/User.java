@@ -23,7 +23,7 @@ public class User implements Serializable {
 	private String lastName;	
 	@Column(nullable = false, length = 120, unique = true)
 	private String email;
-	@Column(nullable = false, length = 50)
+	@Column(nullable = false)
 	private String encryptedPassword;
 	
 	public Long getId() {
