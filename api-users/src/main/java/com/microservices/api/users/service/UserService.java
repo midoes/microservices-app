@@ -7,5 +7,6 @@ import com.microservices.api.users.dto.UserDTO;
 public interface UserService extends UserDetailsService {
 	
 	public UserDTO createUser(UserDTO userDTO);
+	public UserDTO getUserDetailsByEmail(String email);
 
 }
