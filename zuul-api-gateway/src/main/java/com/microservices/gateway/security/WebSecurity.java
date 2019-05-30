@@ -20,7 +20,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
-		http.authorizeRequests()
+		http.authorizeRequests()		
+			.antMatchers(env.getProperty("api.users.actuator.url.path")).permitAll()
 			.antMatchers(env.getProperty("api.zuul.actuator.url.path")).permitAll()
 			.antMatchers(HttpMethod.POST, env.getProperty("api.registration.url.path")).permitAll()
 			.antMatchers(HttpMethod.POST, env.getProperty("api.login.url.path")).permitAll()
