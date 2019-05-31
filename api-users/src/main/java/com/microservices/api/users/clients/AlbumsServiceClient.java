@@ -11,6 +11,7 @@ import com.microservices.api.users.dto.AlbumDTO;
 @FeignClient(name="albums-ws")
 public interface AlbumsServiceClient {
 	
+	// Forcing 404 error Bad Request
 	@GetMapping("/users/{id}/albumss")
 	public List<AlbumDTO> getAlbums(@PathVariable String id);
  

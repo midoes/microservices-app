@@ -94,12 +94,16 @@ public class UserServiceImpl implements UserService {
         List<AlbumDTO> albumsList = albumsListResponse.getBody();         
         */
 		
+		/*
 		List<AlbumDTO> albumsList = new ArrayList<AlbumDTO>();
 		try {
 			albumsList = albumsServiceClient.getAlbums(id);
 		} catch (FeignException e) {
 			logger.error(e.getMessage());
 		}
+		*/
+		
+		List<AlbumDTO> albumsList = albumsServiceClient.getAlbums(id);
 		
         userDetails.setAlbums(albumsList);
 		return userDetails;
