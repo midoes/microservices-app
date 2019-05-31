@@ -11,7 +11,7 @@ import com.microservices.api.users.dto.AlbumDTO;
 @FeignClient(name="albums-ws")
 public interface AlbumsServiceClient {
 	
-	@GetMapping("/users/{id}/albums")
+	@GetMapping("/users/{id}/albumss")
 	public List<AlbumDTO> getAlbums(@PathVariable String id);
  
 }
