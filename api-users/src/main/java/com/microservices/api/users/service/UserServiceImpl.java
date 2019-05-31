@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
@@ -23,9 +25,13 @@ import com.microservices.api.users.dto.UserDTO;
 import com.microservices.api.users.model.User;
 import com.microservices.api.users.repository.UserRepository;
 
+import feign.FeignException;
+
 @Service
 public class UserServiceImpl implements UserService {
 
+	Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Autowired
 	UserRepository userRepository;
 
@@ -88,7 +94,12 @@ public class UserServiceImpl implements UserService {
         List<AlbumDTO> albumsList = albumsListResponse.getBody();         
         */
 		
-		List<AlbumDTO> albumsList = albumsServiceClient.getAlbums(id);
+		List<AlbumDTO> albumsList = new ArrayList<AlbumDTO>();
+		try {
+			albumsList = albumsServiceClient.getAlbums(id);
+		} catch (FeignException e) {
+			logger.error(e.getMessage());
+		}
 		
         userDetails.setAlbums(albumsList);
 		return userDetails;
