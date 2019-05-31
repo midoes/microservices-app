@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.microservices.api.users.clients.AlbumsServiceClient;
 import com.microservices.api.users.dto.AlbumDTO;
 import com.microservices.api.users.dto.UserDTO;
 import com.microservices.api.users.model.User;
@@ -34,8 +35,11 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	Environment environment;
 	
+	//@Autowired
+	//RestTemplate restTemplate;
+	
 	@Autowired
-	RestTemplate restTemplate;
+	AlbumsServiceClient albumsServiceClient;
 	
 	@Override
 	public UserDTO createUser(UserDTO userDTO) {
@@ -77,9 +81,15 @@ public class UserServiceImpl implements UserService {
         ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		UserDTO userDetails = modelMapper.map(user.get(), UserDTO.class);       
-        String albumsUrl = String.format(environment.getProperty("albums.url"), id);        
+        
+		/*
+		String albumsUrl = String.format(environment.getProperty("albums.url"), id);        
         ResponseEntity<List<AlbumDTO>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumDTO>>() {});
         List<AlbumDTO> albumsList = albumsListResponse.getBody();         
+        */
+		
+		List<AlbumDTO> albumsList = albumsServiceClient.getAlbums(id);
+		
         userDetails.setAlbums(albumsList);
 		return userDetails;
 	}
