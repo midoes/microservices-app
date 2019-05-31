@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,5 +45,11 @@ public class UserController {
 		UserDTO user = userService.createUser(userDetails);
 		return ResponseEntity.status(HttpStatus.CREATED).body(user);
 	}
+	
+	@GetMapping(value="/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<UserDTO> getUser(@PathVariable("id") String id) {       
+        UserDTO userDetails = userService.getUserById(id);         
+        return ResponseEntity.status(HttpStatus.OK).body(userDetails);
+    }
 	
 }

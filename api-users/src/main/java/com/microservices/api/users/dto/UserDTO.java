@@ -1,29 +1,19 @@
 package com.microservices.api.users.dto;
 
 import java.io.Serializable;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 public class UserDTO implements Serializable {
 		
 	private static final long serialVersionUID = -8359891099078675737L;
 	
 	private String id;
-	@NotNull
-	@Size(min = 2)
 	private String firstName;
-	@NotNull
-	@Size(min = 2)
 	private String lastName;
-	@NotNull
-	@Size(min = 8, max = 16)
-	private String password;
-	@Email
-	@NotNull
-	private String email;	
+	private String email;
+	private String password;	
 	private String encryptedPassword;
+	private List<AlbumDTO> albums;
 	
 	public String getId() {
 		return id;
@@ -60,6 +50,12 @@ public class UserDTO implements Serializable {
 	}
 	public void setEncryptedPassword(String encryptedPassword) {
 		this.encryptedPassword = encryptedPassword;
+	}
+	public List<AlbumDTO> getAlbums() {
+		return albums;
+	}
+	public void setAlbums(List<AlbumDTO> albums) {
+		this.albums = albums;
 	}	
 
 }

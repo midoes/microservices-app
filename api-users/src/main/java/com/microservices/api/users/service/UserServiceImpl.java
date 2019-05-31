@@ -1,15 +1,23 @@
 package com.microservices.api.users.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.microservices.api.users.dto.AlbumDTO;
 import com.microservices.api.users.dto.UserDTO;
 import com.microservices.api.users.model.User;
 import com.microservices.api.users.repository.UserRepository;
@@ -22,6 +30,12 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Autowired
+	Environment environment;
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	@Override
 	public UserDTO createUser(UserDTO userDTO) {
@@ -52,6 +66,22 @@ public class UserServiceImpl implements UserService {
 		} else {
 			throw new UsernameNotFoundException(email);
 		}
+	}
+
+	@Override
+	public UserDTO getUserById(String id) {
+		Optional<User> user = userRepository.findById(Long.valueOf(id));     
+        if(!user.isPresent()) { 
+        	throw new UsernameNotFoundException("User not found");
+        }        
+        ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		UserDTO userDetails = modelMapper.map(user.get(), UserDTO.class);       
+        String albumsUrl = String.format(environment.getProperty("albums.url"), id);        
+        ResponseEntity<List<AlbumDTO>> albumsListResponse = restTemplate.exchange(albumsUrl, HttpMethod.GET, null, new ParameterizedTypeReference<List<AlbumDTO>>() {});
+        List<AlbumDTO> albumsList = albumsListResponse.getBody();         
+        userDetails.setAlbums(albumsList);
+		return userDetails;
 	}
 
 }
