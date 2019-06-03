@@ -103,7 +103,9 @@ public class UserServiceImpl implements UserService {
 		}
 		*/
 		
+		logger.info("Before calling albums Microservice");
 		List<AlbumDTO> albumsList = albumsServiceClient.getAlbums(id);
+		logger.info("After calling albums Microservice");
 		
         userDetails.setAlbums(albumsList);
 		return userDetails;
